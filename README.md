@@ -1,4 +1,4 @@
-# streamlit_v52data
+# v52data dashboard (with streamlit)
 This repo contains code to create a simple web app interface to visualize data of the V52 Wind Turbine dataset.
 The original dataset contains historical observations of the turbine operations.
 It sourced from DTU, accessible through DOIs 10.11583/DTU.7856891 and 10.11583/DTU.7856888. 
