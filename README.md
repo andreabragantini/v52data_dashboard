@@ -24,3 +24,35 @@ The `.streamlit` directory contains a file storing **theme settings** for stream
 
 This application is hosted on GitHub and deployed via Streamlit Community Cloud. You can access it here: [appv52data](https://appv52data.streamlit.app/).
 *Note: The app may enter a sleep state after periods of inactivity and could take a few moments to wake up when first accessed.*
+
+### Running the App Locally
+
+#### Using Conda
+1. Create a new conda environment:
+   ```bash
+   conda create -n v52data_env python=3.9
+   conda activate v52data_env
+   ```
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Run the app:
+   ```bash
+   streamlit run streamlit_app.py
+   ```
+
+#### Using Virtualenv
+1. Create and activate a virtual environment:
+   ```bash
+   python -m venv v52data_env
+   v52data_env\Scripts\activate
+   ```
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Run the app:
+   ```bash
+   streamlit run streamlit_app.py
+   ```
