@@ -77,27 +77,69 @@ from plotting_funs import create_plot
 # prepare dataframe
 df_v52.reset_index(inplace=True)
 
-# Sidebar with slider for selecting time frame for Active Power
-st.sidebar.subheader('Active Power')
-start_date_act_pow = st.sidebar.date_input('Select start date', pd.to_datetime(min(df_v52['Date'])), key="start_date_act_pow")
-end_date_act_pow = st.sidebar.date_input('Select end date', pd.to_datetime(max(df_v52['Date'])), key="end_date_act_pow")
-start_date_act_pow = pd.to_datetime(start_date_act_pow)
-end_date_act_pow = pd.to_datetime(end_date_act_pow)
-filtered_data_act_pow = df_v52[(df_v52['Date'] >= start_date_act_pow) & (df_v52['Date'] <= end_date_act_pow)]
-fig_act_pow = create_plot(filtered_data_act_pow['Date'], filtered_data_act_pow['ActPow'],
+# Sidebar with a single time selector for all charts
+st.sidebar.subheader('Select Time Frame')
+start_date = st.sidebar.date_input('Start Date', pd.to_datetime(min(df_v52['Date'])), key="start_date")
+end_date = st.sidebar.date_input('End Date', pd.to_datetime(max(df_v52['Date'])), key="end_date")
+start_date = pd.to_datetime(start_date)
+end_date = pd.to_datetime(end_date)
+
+# Filter data based on the selected time frame
+filtered_data = df_v52[(df_v52['Date'] >= start_date) & (df_v52['Date'] <= end_date)]
+
+# Update all charts to use the filtered data
+fig_act_pow = create_plot(filtered_data['Date'], filtered_data['ActPow'],
                           'V52 Turbine Active Power Output', 'Power Output [kW]')
-
-# Sidebar with slider for selecting time frame for Reactive Power
-st.sidebar.subheader('Reactive Power')
-start_date_react_pow = st.sidebar.date_input('Select start date', pd.to_datetime(min(df_v52['Date'])), key="start_date_react_pow")
-end_date_react_pow = st.sidebar.date_input('Select end date', pd.to_datetime(max(df_v52['Date'])), key="end_date_react_pow")
-start_date_react_pow = pd.to_datetime(start_date_react_pow)
-end_date_react_pow = pd.to_datetime(end_date_react_pow)
-filtered_data_react_pow = df_v52[(df_v52['Date'] >= start_date_react_pow) & (df_v52['Date'] <= end_date_react_pow)]
-fig_react_pow = create_plot(filtered_data_react_pow['Date'], filtered_data_react_pow['RePow'],
+fig_react_pow = create_plot(filtered_data['Date'], filtered_data['RePow'],
                             'V52 Turbine Reactive Power Output', 'Reactive Power [kVAR]')
+fig_wind_speed = create_plot(filtered_data['Date'], filtered_data['Wsp_44m'],
+                             'Wind Speed Over Time', 'Wind Speed [m/s]')
+fig_wind_direction = create_plot(filtered_data['Date'], filtered_data['Wdir_41m'],
+                                 'Wind Direction Over Time', 'Wind Direction [°]')
 
-
-# Display the Plotly charts
+# Display the updated charts
 st.plotly_chart(fig_act_pow)
 st.plotly_chart(fig_react_pow)
+st.plotly_chart(fig_wind_speed)
+st.plotly_chart(fig_wind_direction)
+
+############################################################################################
+# Fourth Row: Wind Speed and Direction Trends
+############################################################################################
+
+st.subheader('Wind Speed and Direction Trends')
+
+# Sidebar with slider for selecting time frame for Wind Speed and Direction
+st.sidebar.subheader('Wind Speed and Direction')
+start_date_wind = st.sidebar.date_input('Select start date', pd.to_datetime(min(df_v52['Date'])), key="start_date_wind")
+end_date_wind = st.sidebar.date_input('Select end date', pd.to_datetime(max(df_v52['Date'])), key="end_date_wind")
+start_date_wind = pd.to_datetime(start_date_wind)
+end_date_wind = pd.to_datetime(end_date_wind)
+filtered_data_wind = df_v52[(df_v52['Date'] >= start_date_wind) & (df_v52['Date'] <= end_date_wind)]
+
+# Create Wind Speed and Direction Plots
+fig_wind_speed = create_plot(filtered_data_wind['Date'], filtered_data_wind['Wsp_44m'],
+                             'Wind Speed Over Time', 'Wind Speed [m/s]')
+fig_wind_direction = create_plot(filtered_data_wind['Date'], filtered_data_wind['Wdir_41m'],
+                                 'Wind Direction Over Time', 'Wind Direction [°]')
+
+# Display the new plots
+st.plotly_chart(fig_wind_speed)
+st.plotly_chart(fig_wind_direction)
+
+############################################################################################
+# Fifth Row: Stability Analysis
+############################################################################################
+
+st.subheader('Stability Analysis')
+
+# Pie chart for stability distribution
+stability_counts = df_v52['stability'].value_counts()
+stability_labels = ['Stable', 'Unstable']
+fig_stability = go.Figure(data=[
+    go.Pie(labels=stability_labels, values=stability_counts, hole=0.4)
+])
+fig_stability.update_layout(title_text='Stability Distribution')
+
+# Display the pie chart
+st.plotly_chart(fig_stability)
