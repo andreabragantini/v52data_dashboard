@@ -23,3 +23,20 @@ gurobi.log
 
 # PyCharm project files
 .idea/*
+
+# Ignore virtual environment folders
+venv/
+.env/
+
+# Ignore data and large files
+*.csv
+*.zip
+*.tar.gz
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+
+# Ignore system files
+.DS_Store
+Thumbs.db
